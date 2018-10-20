@@ -25,7 +25,7 @@ type Cmd struct {
 	Stderr io.Writer
 
 	// Once Wait returns, his will contain the exit code of the process.
-	exitStatus int
+	ExitStatus int
 
 	// Internal fields
 	exitCh chan struct{}
@@ -54,7 +54,7 @@ func (c *Cmd) SetExitStatus(status int, err error) {
 	c.Lock()
 	defer c.Unlock()
 
-	c.exitStatus = status
+	c.ExitStatus = status
 	c.err = err
 
 	close(c.exitCh)
@@ -69,10 +69,10 @@ func (c *Cmd) Wait() error {
 	c.Lock()
 	defer c.Unlock()
 
-	if c.err != nil || c.exitStatus != 0 {
+	if c.err != nil || c.ExitStatus != 0 {
 		return &ExitError{
 			Command:    c.Command,
-			ExitStatus: c.exitStatus,
+			ExitStatus: c.ExitStatus,
 			Err:        c.err,
 		}
 	}

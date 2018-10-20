@@ -703,7 +703,16 @@ func (p *provisioner) runCommand(o terraform.UIOutput, comm communicator.Communi
 	}
 
 	if err := cmd.Wait(); err != nil {
-		return err
+		// Allow RFC062 Exit Codes
+		// https://github.com/chef/chef-rfc/blob/master/rfc062-exit-status.md
+		switch cmd.ExitStatus {
+		case 35:
+			o.Output("Reboot has been scheduled in the run state")
+		case 37:
+			o.Output("Reboot needs to be completed")
+		default:
+			return err
+		}
 	}
 
 	return nil
