@@ -15,6 +15,7 @@ import (
 	"strings"
 	"sync"
 	"text/template"
+	"time"
 
 	"github.com/hashicorp/terraform/communicator"
 	"github.com/hashicorp/terraform/communicator/remote"
@@ -708,13 +709,14 @@ func (p *provisioner) runCommand(o terraform.UIOutput, comm communicator.Communi
 		switch cmd.ExitStatus {
 		case 35:
 			o.Output("Reboot has been scheduled in the run state")
-			p.runCommand(o, comm, command)
 		case 37:
 			o.Output("Reboot needs to be completed")
-			p.runCommand(o, comm, command)
 		default:
 			return err
 		}
+		// Wait for a Connection & Retry
+		time.Sleep(1 * time.Minute)
+		p.runCommand(o, comm, command)
 	}
 
 	return nil
