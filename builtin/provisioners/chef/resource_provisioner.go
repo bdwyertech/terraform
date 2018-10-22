@@ -708,8 +708,10 @@ func (p *provisioner) runCommand(o terraform.UIOutput, comm communicator.Communi
 		switch cmd.ExitStatus {
 		case 35:
 			o.Output("Reboot has been scheduled in the run state")
+			p.runCommand(o, comm, command)
 		case 37:
 			o.Output("Reboot needs to be completed")
+			p.runCommand(o, comm, command)
 		default:
 			return err
 		}
