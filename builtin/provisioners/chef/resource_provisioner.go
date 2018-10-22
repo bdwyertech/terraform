@@ -718,7 +718,7 @@ func (p *provisioner) runCommand(o terraform.UIOutput, comm communicator.Communi
 		o.Output("Waiting 1 minute for Node to Reboot")
 		time.Sleep(1 * time.Minute)
 		o.Output("Retrying Chef")
-		p.runCommand(o, comm, command)
+		return p.runCommand(o, comm, command)
 	}
 
 	return nil
